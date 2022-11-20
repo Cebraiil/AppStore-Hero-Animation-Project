@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    
     // MARK: Animation Properties
     @State var currentItem: Today?
     @State var showDetailPage: Bool = false
@@ -21,6 +22,7 @@ struct HomeView: View {
     var body: some View {
         ScrollView(.vertical, showsIndicators: false){
             VStack(spacing: 0){
+                // Header
                 HStack(alignment: .bottom) {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("MONDAY 4 APRIL")
@@ -43,6 +45,7 @@ struct HomeView: View {
                 .padding(.bottom)
                 .opacity(showDetailPage ? 0 : 1)
                  
+                // items
                 ForEach(todayItems) { item in
                     Button {
                         withAnimation(.interactiveSpring(response: 0.5, dampingFraction: 0.6, blendDuration: 0.6)) {
@@ -69,7 +72,7 @@ struct HomeView: View {
                     .ignoresSafeArea(.container, edges: .top)
             }
         }
-        .background(alignment: .top){
+        .background(alignment: .top) {
             RoundedRectangle(cornerRadius: 15, style: .continuous)
                 .fill(Color("BG"))
                 .frame(height: animateView ? nil : 350, alignment: .top)
@@ -81,6 +84,7 @@ struct HomeView: View {
     @ViewBuilder
     func CardView(item: Today)-> some View {
         VStack(alignment: .leading, spacing: 1) {
+            // Banner
             ZStack(alignment: .topLeading) {
                 
                 // Banner Image
@@ -114,6 +118,8 @@ struct HomeView: View {
                 .padding()
                 .offset(y: currentItem?.id == item.id && animateView ? safeArea().top : 0)
             }
+            
+            // App info
             HStack(spacing: 12) {
                 Image(item.appLogo)
                     .resizable()
@@ -153,6 +159,7 @@ struct HomeView: View {
 
             }
             .padding([.horizontal, .bottom, .vertical])
+            
         }
         .background{
             RoundedRectangle(cornerRadius: 15, style: .continuous)
@@ -166,7 +173,6 @@ struct HomeView: View {
             VStack {
                 CardView(item: item)
                     .scaleEffect(animateView ? 1 : 0.93)
-                
                 // long text
                 VStack(spacing: 15) {
                      Text(longText)
@@ -242,24 +248,4 @@ struct HomeView_Previews: PreviewProvider {
 }
 
 
-// MARK: ScaledButton Style
-struct ScaledButtonStyle: ButtonStyle{
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .scaleEffect(configuration.isPressed ? 0.94 : 1)
-            .animation(.easeInOut, value: configuration.isPressed)
-    }
-}
 
-// Safe Area Value
-extension View {
-    func safeArea()->UIEdgeInsets{
-        guard let screen = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
-            return .zero
-        }
-        guard let safeArea = screen.windows.first?.safeAreaInsets else {
-            return .zero
-        }
-        return safeArea
-    }
-}
